@@ -2,13 +2,10 @@ mod error;
 mod models;
 mod utils;
 
-use csv::ReaderBuilder;
-use csv::Trim;
+use csv::{ReaderBuilder, Trim};
 use error::{from_amount_required, PaymentError};
-use models::Transaction;
-use models::TxType;
-use std::collections::HashMap;
-use std::io;
+use models::{Transaction, TxType};
+use std::{collections::HashMap, io};
 
 pub fn run() -> Result<(), PaymentError> {
     let filepath = utils::get_first_arg()?;
