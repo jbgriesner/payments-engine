@@ -2,14 +2,24 @@
 
 ### Summary
 
-|Feature       | Result      | Comment      |
-|---           |:-:          |:-:           |
-| Does the app build?             |    Yes         |              |
-| Does it read and write data?             |   Yes          |              |
-| Is it properly formatted?             |     Yes        |              |
+|Feature       | Result      | 
+|---           |:-:          |
+| Does the app build?             |    Yes         |  
+| Does it read and write data?             |   Yes          |         
+| Is it properly formatted?             |     Yes        |         
+| Do you handle all of the cases?           |    Yes         |  
+| are you handling them correctly            |    Yes         |  
+| How do you know this           |    thanks to the tests + Rust Type System        |  
+| Did you test against sample data?          |    Yes         |  
+| Did you write unit tests for the complicated bits?            |    No         |  
+| Or are you using the type system to ensure correctness?            |    Yes         |  
+| Are you doing something dangerous?            |    No, all errors are handled         |  
+| How are you handling errors?         |    with specific Error type         |  
+| Can you stream values through memory as opposed to loading the entire data set upfront?        |    Yes it's possible easily      |  
+| in a server, and these CSVs came from thousands of concurrent TCP streams       |    simply with a thread pool, or an async runtime after making all functions async       |  
 
 ### Requirements:
-- the stable `rustup` toolchain, and cargo in the PATH.
+- the stable `rustup` toolchain, and `cargo` in the PATH.
 
 ### Launch the app
 To run the app, just execute from the root folder of the project the following command:
