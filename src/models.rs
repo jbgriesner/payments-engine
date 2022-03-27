@@ -44,5 +44,5 @@ pub struct Balance {
     pub available: f64,
     pub held: f64,
     pub total: f64,
-    pub locked: f64,
+    pub locked: bool,
 }
