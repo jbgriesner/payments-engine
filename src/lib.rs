@@ -5,7 +5,7 @@ pub mod utils;
 use csv::{ReaderBuilder, Trim};
 use error::{from_amount_required, PaymentError};
 use models::{Transaction, TxType};
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 pub use utils::get_first_arg;
 
 #[allow(unused_mut)]
@@ -15,7 +15,7 @@ pub fn run(filepath: String, mut writer: impl std::io::Write) -> Result<(), Paym
         .trim(Trim::All)
         .from_reader(file_buffer);
 
-    let transactions_map = rdr.deserialize().fold(HashMap::new(), |mut hm, record| {
+    let transactions_map = rdr.deserialize().fold(BTreeMap::new(), |mut hm, record| {
         let trans: Transaction = record.unwrap();
         let trans_updated_amount = models::Transaction {
             amount: if let Some(amount) = trans.amount {
@@ -35,7 +35,7 @@ pub fn run(filepath: String, mut writer: impl std::io::Write) -> Result<(), Paym
     let mut wtr = csv::Writer::from_writer(writer);
 
     for (client_id, transactions) in transactions_map.iter() {
-        let mut map_tx_amount = HashMap::new();
+        let mut map_tx_amount = BTreeMap::new();
 
         let init_balance = models::Balance {
             client: *client_id,
