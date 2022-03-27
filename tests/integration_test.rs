@@ -40,7 +40,7 @@ fn test_resolve() {
     // #[allow(unused_mut)]
     payments_engine::run(FILEPATH_RESOLVE.to_string(), &mut result).unwrap();
 
-    let valid_output = "client,available,held,total,locked\n1,100.0,10.0,110.0,false\n".to_string();
+    let valid_output = "client,available,held,total,locked\n1,110.0,0.0,110.0,false\n".to_string();
     let generated_output = String::from_utf8(result).unwrap();
 
     assert_eq!(generated_output, valid_output);
@@ -53,7 +53,7 @@ fn test_chargeback() {
     // #[allow(unused_mut)]
     payments_engine::run(FILEPATH_CHARGEBACK.to_string(), &mut result).unwrap();
 
-    let valid_output = "client,available,held,total,locked\n1,100.0,10.0,110.0,true\n".to_string();
+    let valid_output = "client,available,held,total,locked\n1,100.0,0.0,100.0,true\n".to_string();
     let generated_output = String::from_utf8(result).unwrap();
 
     assert_eq!(generated_output, valid_output);

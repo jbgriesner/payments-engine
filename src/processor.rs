@@ -28,6 +28,7 @@ pub fn generate_client_balance(
     transactions: &Vec<Transaction>,
 ) -> Result<Balance, PaymentError> {
     let mut map_tx_amount = BTreeMap::new();
+    let mut vec_tx_dispute = Vec::<u32>::new();
 
     let init_balance = Balance {
         client: *client_id,
@@ -41,7 +42,7 @@ pub fn generate_client_balance(
         .iter()
         .try_fold(init_balance, |b, t| match t.tx_type {
             TxType::Deposit => {
-                if let Some(amount) = t.amount {
+                if let (Some(amount), false) = (t.amount, b.locked) {
                     map_tx_amount.insert(t.tx_id, amount);
                     Ok(Balance {
                         total: b.total + amount,
@@ -55,7 +56,7 @@ pub fn generate_client_balance(
                 }
             }
             TxType::Withdrawal => {
-                if let Some(amount) = t.amount {
+                if let (Some(amount), false) = (t.amount, b.locked) {
                     if amount > b.available {
                         Ok(b)
                     } else {
@@ -73,7 +74,8 @@ pub fn generate_client_balance(
                 }
             }
             TxType::Dispute => {
-                if let Some(disputed_amount) = map_tx_amount.get(&t.tx_id) {
+                if let (Some(disputed_amount), false) = (map_tx_amount.get(&t.tx_id), b.locked) {
+                    vec_tx_dispute.push(t.tx_id);
                     Ok(Balance {
                         held: b.held + disputed_amount,
                         available: b.available - disputed_amount,
@@ -84,7 +86,12 @@ pub fn generate_client_balance(
                 }
             }
             TxType::Resolve => {
-                if let Some(disputed_amount) = map_tx_amount.get(&t.tx_id) {
+                if let (Some(disputed_amount), true, false) = (
+                    map_tx_amount.get(&t.tx_id),
+                    vec_tx_dispute.contains(&t.tx_id),
+                    b.locked,
+                ) {
+                    vec_tx_dispute.retain(|v| *v != t.tx_id);
                     Ok(Balance {
                         held: b.held - disputed_amount,
                         available: b.available + disputed_amount,
@@ -95,7 +102,10 @@ pub fn generate_client_balance(
                 }
             }
             TxType::Chargeback => {
-                if let Some(disputed_amount) = map_tx_amount.get(&t.tx_id) {
+                if let (Some(disputed_amount), true) = (
+                    map_tx_amount.get(&t.tx_id),
+                    vec_tx_dispute.contains(&t.tx_id),
+                ) {
                     Ok(Balance {
                         held: b.held - disputed_amount,
                         total: b.total - disputed_amount,
