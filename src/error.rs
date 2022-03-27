@@ -26,15 +26,6 @@ impl fmt::Display for PaymentError {
         match *self {
             PaymentError::NoFilePathProvided(ref message) => write!(f, "{}", message),
             PaymentError::AmountMissing(ref message) => write!(f, "{}", message),
-            // EnclaveError::Inner(ref message, ref inner_message) => {
-            //     write!(f, "{}. Inner message: {}", message, inner_message)
-            // }
-            // EnclaveError::SgxOcall(ref sgx_status, ref message) => {
-            //     write!(f, "SGX status: {}. Message: {}", sgx_status, message)
-            // }
-            // EnclaveError::AuthError(ref message) => {
-            //     write!(f, "Authentication Message: {}", message)
-            // }
         }
     }
 }
