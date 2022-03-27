@@ -1,26 +1,36 @@
-use crate::error::{from_amount_required, PaymentError};
+use crate::error::{from_amount_required, from_csv_parsing_error, PaymentError};
 use crate::models::{Balance, Transaction, TxType};
 use csv::Reader;
 use std::collections::BTreeMap;
 use std::io::BufReader;
 
-pub fn from_reader(mut rdr: Reader<BufReader<std::fs::File>>) -> BTreeMap<u16, Vec<Transaction>> {
-    rdr.deserialize().fold(BTreeMap::new(), |mut hm, record| {
-        let trans: Transaction = record.unwrap();
-        let trans_updated_amount = Transaction {
-            amount: if let Some(amount) = trans.amount {
-                Some(f64::trunc(amount * 10000.0) / 10000.0)
-            } else {
-                None
-            },
-            ..trans
-        };
+pub fn from_reader(
+    mut rdr: Reader<BufReader<std::fs::File>>,
+) -> Result<BTreeMap<u16, Vec<Transaction>>, PaymentError> {
+    rdr.deserialize().try_fold(
+        BTreeMap::new(),
+        |mut hm, record: Result<Transaction, csv::Error>| {
+            if let Ok(trans) = record {
+                let trans_updated_amount = Transaction {
+                    amount: if let Some(amount) = trans.amount {
+                        Some(f64::trunc(amount * 10000.0) / 10000.0)
+                    } else {
+                        None
+                    },
+                    ..trans
+                };
 
-        hm.entry(trans.client_id)
-            .or_insert(Vec::new())
-            .push(trans_updated_amount);
-        hm
-    })
+                hm.entry(trans.client_id)
+                    .or_insert(Vec::new())
+                    .push(trans_updated_amount);
+                Ok(hm)
+            } else {
+                Err(from_csv_parsing_error(
+                    "An error occurred during the parsing of the file".to_string(),
+                ))
+            }
+        },
+    )
 }
 
 pub fn generate_client_balance(
