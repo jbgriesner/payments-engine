@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
+/// An enum type to represent the possible types of a transaction
 #[derive(Deserialize, Debug)]
 pub enum TxType {
     #[serde(rename = "deposit")]
@@ -15,6 +16,7 @@ pub enum TxType {
     Chargeback,
 }
 
+/// We wan to be able to display a transaction type (for debug mainly)
 impl fmt::Display for TxType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
@@ -27,6 +29,7 @@ impl fmt::Display for TxType {
     }
 }
 
+/// A struct type used by Serde for parsing input csv files
 #[derive(Deserialize, Debug)]
 pub struct Transaction {
     #[serde(rename = "type")]
@@ -38,6 +41,7 @@ pub struct Transaction {
     pub amount: Option<f64>,
 }
 
+/// A struct type to write a csv on the standard output
 #[derive(Serialize, Debug)]
 pub struct Balance {
     pub client: u16,

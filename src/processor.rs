@@ -4,9 +4,13 @@ use csv::Reader;
 use std::collections::BTreeMap;
 use std::io::BufReader;
 
+/// Simple function that takes a reader on a csv file, and deserialize it into vectors of Transactions
+/// These vectors are values in a resulting BTreeMap in which the client id are the keys
+/// For this purpose I use a functional approach with a folding pattern
 pub fn from_reader(
     mut rdr: Reader<BufReader<std::fs::File>>,
 ) -> Result<BTreeMap<u16, Vec<Transaction>>, PaymentError> {
+    /// Given that the parsing could fail, I use the 'try_fold' method to handle a csv parsing error
     rdr.deserialize().try_fold(
         BTreeMap::new(),
         |mut hm, record: Result<Transaction, csv::Error>| {
@@ -33,6 +37,8 @@ pub fn from_reader(
     )
 }
 
+/// Main function that takes a client id and its associated vector of transactions, and generate 'balances'
+/// Balances represent the status of the client account after having processed all the associated transactions
 pub fn generate_client_balance(
     client_id: &u16,
     transactions: &Vec<Transaction>,

@@ -6,6 +6,8 @@ pub mod utils;
 use error::PaymentError;
 pub use utils::get_first_arg;
 
+/// The main function of the project that is called by the ./bin/main.rs
+/// A mutable 'writer' is passed as an argument to be able to push on different output (standard output or an array of bytes for instance, which is useful for tests)
 #[allow(unused_mut)]
 pub fn run(filepath: String, mut writer: impl std::io::Write) -> Result<(), PaymentError> {
     let mut rdr = utils::reader_from_filepath(filepath)?;

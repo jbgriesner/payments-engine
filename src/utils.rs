@@ -8,6 +8,8 @@ use std::io;
 use std::io::BufReader;
 use std::path::Path;
 
+/// This module contains only simple functions
+
 pub fn reader_from_filepath(
     filepath: String,
 ) -> Result<Reader<BufReader<std::fs::File>>, PaymentError> {

@@ -1,6 +1,7 @@
 use std::fmt;
 use std::io;
 
+/// A struct to encapsulate all possible errors that could happen in the execution of the process
 #[derive(Debug)]
 pub enum PaymentError {
     NoFilePathProvided(String),
