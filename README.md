@@ -44,15 +44,15 @@ Some questions have been asked. Here are below some brief answers with more or l
 | Does the app build?             |    Yes         |  
 | Does it read and write data?             |   Yes          |         
 | Is it properly formatted?             |     Yes        |         
-| Do you handle all of the cases?           |    Yes         |  
-| Are you handling them correctly            |    Yes         |  
-| How do you know this           |    thanks to the tests + Rust Type System        |  
-| Did you test against sample data?          |    Yes         |  
-| Did you write unit tests for the complicated bits?            |    No         |  
-| Or are you using the type system to ensure correctness?            |    Yes         |  
-| Are you doing something dangerous?            |    No, all errors are handled         |  
-| How are you handling errors?         |    with specific Error type         |  
-| Can you stream values through memory as opposed to loading the entire data set upfront?        |    Yes it's possible easily      |  
+| Does it handle all of the cases?           |    Yes         |  
+| Does it handle them correctly            |    Yes         |  
+| How do I know this           |    thanks to the tests + Rust Type System        |  
+| Has it been tested against sample data?          |    Yes         |  
+| Do unit tests exist for the complicated bits?            |    No         |  
+| Is the type system used to ensure correctness?            |    Yes         |  
+| Is anything dangerous done?            |    No, all errors are handled         |  
+| Are errors handled?         |    with specific Error type         |  
+| It is possible to stream values through memory as opposed to loading the entire data set upfront?        |    Yes it's possible easily      |  
 | What about if these CSVs came from thousands of concurrent TCP streams...       |    simply with a thread pool, or an async runtime after making all functions async       |  
 
 
